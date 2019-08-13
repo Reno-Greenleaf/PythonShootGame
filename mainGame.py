@@ -81,11 +81,11 @@ while running:
 
     # 控制发射子弹频率,并发射子弹
     if not player.is_hit:
-        if shoot_frequency % 15 == 0:
+        shoot_frequency += 1
+
+        if shoot_frequency == 15:
             bullet_sound.play()
             player.shoot(bullet_img)
-        shoot_frequency += 1
-        if shoot_frequency >= 15:
             shoot_frequency = 0
 
     # 生成敌机
@@ -93,13 +93,16 @@ while running:
         enemy1_pos = [random.randint(0, SCREEN_WIDTH - enemy1_rect.width), 0]
         enemy1 = Enemy(enemy1_img, enemy1_down_imgs, enemy1_pos)
         enemies1.add(enemy1)
+
     enemy_frequency += 1
+
     if enemy_frequency >= 100:
         enemy_frequency = 0
 
     # 移动子弹，若超出窗口范围则删除
     for bullet in player.bullets:
         bullet.move()
+
         if bullet.rect.bottom < 0:
             player.bullets.remove(bullet)
 
@@ -107,17 +110,20 @@ while running:
     for enemy in enemies1:
         enemy.move()
         # 判断玩家是否被击中
+
         if pygame.sprite.collide_circle(enemy, player):
             enemies_down.add(enemy)
             enemies1.remove(enemy)
             player.is_hit = True
             game_over_sound.play()
             break
+
         if enemy.rect.top > SCREEN_HEIGHT:
             enemies1.remove(enemy)
 
     # 将被击中的敌机对象添加到击毁敌机Group中，用来渲染击毁动画
     enemies1_down = pygame.sprite.groupcollide(enemies1, player.bullets, 1, 1)
+
     for enemy_down in enemies1_down:
         enemies_down.add(enemy_down)
 
@@ -134,6 +140,7 @@ while running:
         player.img_index = player_down_index // 8
         screen.blit(player.image[player.img_index], player.rect)
         player_down_index += 1
+
         if player_down_index > 47:
             running = False
 
@@ -141,10 +148,12 @@ while running:
     for enemy_down in enemies_down:
         if enemy_down.down_index == 0:
             enemy1_down_sound.play()
+
         if enemy_down.down_index > 7:
             enemies_down.remove(enemy_down)
             score += 1000
             continue
+
         screen.blit(enemy_down.down_imgs[enemy_down.down_index // 2], enemy_down.rect)
         enemy_down.down_index += 1
 
@@ -173,10 +182,13 @@ while running:
     if not player.is_hit:
         if key_pressed[K_w] or key_pressed[K_UP]:
             player.moveUp()
+
         if key_pressed[K_s] or key_pressed[K_DOWN]:
             player.moveDown()
+
         if key_pressed[K_a] or key_pressed[K_LEFT]:
             player.moveLeft()
+
         if key_pressed[K_d] or key_pressed[K_RIGHT]:
             player.moveRight()
 
@@ -194,4 +206,5 @@ while 1:
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
+
     pygame.display.update()
