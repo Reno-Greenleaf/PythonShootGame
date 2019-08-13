@@ -41,28 +41,33 @@ class Player(pygame.sprite.Sprite):
         self.is_hit = False                             # 玩家是否被击中
 
     def shoot(self, bullet_img):
+        """ Newly created bullet is going to start moving towards enemies immediately. """
         bullet = Bullet(bullet_img, self.rect.midtop)
         self.bullets.add(bullet)
 
     def moveUp(self):
+        """ React on up key press. """
         if self.rect.top <= 0:
             self.rect.top = 0
         else:
             self.rect.top -= self.speed
 
     def moveDown(self):
+        """ React on down key press. """
         if self.rect.top >= SCREEN_HEIGHT - self.rect.height:
             self.rect.top = SCREEN_HEIGHT - self.rect.height
         else:
             self.rect.top += self.speed
 
     def moveLeft(self):
+        """ React left up key press. """
         if self.rect.left <= 0:
             self.rect.left = 0
         else:
             self.rect.left -= self.speed
 
     def moveRight(self):
+        """ React on right key press. """
         if self.rect.left >= SCREEN_WIDTH - self.rect.width:
             self.rect.left = SCREEN_WIDTH - self.rect.width
         else:
