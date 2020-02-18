@@ -37,9 +37,9 @@ plane_img = pygame.image.load(filename)
 
 # Set player related parameters.
 player_rect = []
-player_rect.append(pygame.Rect(0, 99, 102, 126))        # 玩家精灵图片区域
+player_rect.append(pygame.Rect(0, 99, 102, 126))        # Player sprite picture area
 player_rect.append(pygame.Rect(165, 360, 102, 126))
-player_rect.append(pygame.Rect(165, 234, 102, 126))     # 玩家爆炸精灵图片区域
+player_rect.append(pygame.Rect(165, 234, 102, 126))     # Player explodes sprite image area
 player_rect.append(pygame.Rect(330, 624, 102, 126))
 player_rect.append(pygame.Rect(330, 498, 102, 126))
 player_rect.append(pygame.Rect(432, 624, 102, 126))
@@ -100,16 +100,17 @@ while running:
         enemy_frequency = 0
 
     # Move the bullet, if it is beyond the window range, delete.
+    player.bullets.update()
+
     for bullet in player.bullets:
-        bullet.move()
 
         if bullet.rect.bottom < 0:
             player.bullets.remove(bullet)
 
     # Move enemy aircraft, delete if it exceeds the window range.
-    for enemy in enemies1:
-        enemy.move()
+    enemies1.update()
 
+    for enemy in enemies1:
         # Determine if the player is hit.
         if pygame.sprite.collide_circle(enemy, player):
             enemies_down.add(enemy)
@@ -144,7 +145,7 @@ while running:
         if player_down_index > 47:
             running = False
 
-    # Draw an wreck animation.
+    # Draw a wreck animation.
     for enemy_down in enemies_down:
         if enemy_down.down_index == 0:
             enemy1_down_sound.play()
@@ -177,20 +178,8 @@ while running:
             exit()
             
     # Listening for keyboard events.
-    key_pressed = pygame.key.get_pressed()
-    # Invalid if the player is hit.
-    if not player.is_hit:
-        if key_pressed[K_w] or key_pressed[K_UP]:
-            player.moveUp()
-
-        if key_pressed[K_s] or key_pressed[K_DOWN]:
-            player.moveDown()
-
-        if key_pressed[K_a] or key_pressed[K_LEFT]:
-            player.moveLeft()
-
-        if key_pressed[K_d] or key_pressed[K_RIGHT]:
-            player.moveRight()
+    key = pygame.key.get_pressed()
+    player.key_pressed(key)
 
 
 font = pygame.font.Font(None, 48)

@@ -6,6 +6,7 @@ Created on Wed Sep 11 16:36:03 2013
 """
 
 import pygame
+from pygame import locals as l
 
 SCREEN_WIDTH = 480
 SCREEN_HEIGHT = 800
@@ -23,7 +24,7 @@ class Bullet(pygame.sprite.Sprite):
         self.rect.midbottom = init_pos
         self.speed = 10
 
-    def move(self):
+    def update(self):
         self.rect.top -= self.speed
 
 # Player class.
@@ -47,28 +48,44 @@ class Player(pygame.sprite.Sprite):
         bullet = Bullet(bullet_img, self.rect.midtop)
         self.bullets.add(bullet)
 
-    def moveUp(self):
+    def key_pressed(self, key):
+        if self.is_hit:
+            return
+
+        if key[l.K_w] or key[l.K_UP]:
+            self._move_up()
+
+        if key[l.K_s] or key[l.K_DOWN]:
+            self._move_down()
+
+        if key[l.K_a] or key[l.K_LEFT]:
+            self._move_left()
+
+        if key[l.K_d] or key[l.K_RIGHT]:
+            self._move_right()
+
+    def _move_up(self):
         """ React to up key press. """
         if self.rect.top <= 0:
             self.rect.top = 0
         else:
             self.rect.top -= self.speed
 
-    def moveDown(self):
+    def _move_down(self):
         """ React to down key press. """
         if self.rect.top >= SCREEN_HEIGHT - self.rect.height:
             self.rect.top = SCREEN_HEIGHT - self.rect.height
         else:
             self.rect.top += self.speed
 
-    def moveLeft(self):
+    def _move_left(self):
         """ React to left up key press. """
         if self.rect.left <= 0:
             self.rect.left = 0
         else:
             self.rect.left -= self.speed
 
-    def moveRight(self):
+    def _move_right(self):
         """ React to right key press. """
         if self.rect.left >= SCREEN_WIDTH - self.rect.width:
             self.rect.left = SCREEN_WIDTH - self.rect.width
@@ -86,5 +103,5 @@ class Enemy(pygame.sprite.Sprite):
        self.speed = 2
        self.down_index = 0
 
-    def move(self):
+    def update(self):
         self.rect.top += self.speed
