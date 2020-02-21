@@ -6,6 +6,7 @@ Created on Wed Sep 11 16:36:03 2013
 """
 
 import pygame
+from pygame.sprite import Sprite, Group
 from pygame import locals as l
 
 SCREEN_WIDTH = 480
@@ -15,10 +16,10 @@ TYPE_SMALL = 1
 TYPE_MIDDLE = 2
 TYPE_BIG = 3
 
-# Bullet.
-class Bullet(pygame.sprite.Sprite):
+
+class Bullet(Sprite):
     def __init__(self, bullet_img, init_pos):
-        pygame.sprite.Sprite.__init__(self)
+        Sprite.__init__(self)
         self.image = bullet_img
         self.rect = self.image.get_rect()
         self.rect.midbottom = init_pos
@@ -27,19 +28,19 @@ class Bullet(pygame.sprite.Sprite):
     def update(self):
         self.rect.top -= self.speed
 
-# Player class.
-class Player(pygame.sprite.Sprite):
+
+class Player(Sprite):
     def __init__(self, plane_img, player_rect, init_pos):
-        pygame.sprite.Sprite.__init__(self)
+        Sprite.__init__(self)
         self.image = []                                 # Used to store a list of player object sprite images.
 
-        for i in range(len(player_rect)):
-            self.image.append(plane_img.subsurface(player_rect[i]).convert_alpha())
+        for rect in player_rect:
+            self.image.append(plane_img.subsurface(rect).convert_alpha())
 
         self.rect = player_rect[0]                      # Initialize the rectangle where the image is located.
         self.rect.topleft = init_pos                    # Initialize the coordinates of the upper left corner of the rectangle.
         self.speed = 8                                  # Initialize the player speed, here is a certain value.
-        self.bullets = pygame.sprite.Group()            # A collection of bullets fired by the player's aircraft.
+        self.bullets = Group()                          # A collection of bullets fired by the player's aircraft.
         self.img_index = 0                              # Player sprite image index.
         self.is_hit = False                             # Whether the player is hit.
 
@@ -92,10 +93,10 @@ class Player(pygame.sprite.Sprite):
         else:
             self.rect.left += self.speed
 
-# Enemy class.
-class Enemy(pygame.sprite.Sprite):
+
+class Enemy(Sprite):
     def __init__(self, enemy_img, enemy_down_imgs, init_pos):
-       pygame.sprite.Sprite.__init__(self)
+       Sprite.__init__(self)
        self.image = enemy_img
        self.rect = self.image.get_rect()
        self.rect.topleft = init_pos

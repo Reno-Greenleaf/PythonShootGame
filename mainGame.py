@@ -32,8 +32,7 @@ pygame.mixer.music.set_volume(0.25)
 background = pygame.image.load('resources/image/background.png').convert()
 game_over = pygame.image.load('resources/image/gameover.png')
 
-filename = 'resources/image/shoot.png'
-plane_img = pygame.image.load(filename)
+plane_img = pygame.image.load('resources/image/shoot.png')
 
 # Set player related parameters.
 player_rect = []
@@ -66,11 +65,8 @@ enemies_down = pygame.sprite.Group()
 
 shoot_frequency = 0
 enemy_frequency = 0
-
 player_down_index = 16
-
 score = 0
-
 clock = pygame.time.Clock()
 
 running = True
@@ -79,7 +75,7 @@ while running:
     # Maximum framerate of the game is 60.
     clock.tick(60)
 
-    # Control the firing of the bullet frequency and fire the bullet.
+    # Controle the firing of the bullet frequency and fire the bullet.
     if not player.is_hit:
         shoot_frequency += 1
 
@@ -89,15 +85,13 @@ while running:
             shoot_frequency = 0
 
     # Generating enemy aircraft.
-    if enemy_frequency % 50 == 0:
+    if enemy_frequency == 50:
         enemy1_pos = [random.randint(0, SCREEN_WIDTH - enemy1_rect.width), 0]
         enemy1 = Enemy(enemy1_img, enemy1_down_imgs, enemy1_pos)
         enemies1.add(enemy1)
+        enemy_frequency = 0
 
     enemy_frequency += 1
-
-    if enemy_frequency >= 100:
-        enemy_frequency = 0
 
     # Move the bullet, if it is beyond the window range, delete.
     player.bullets.update()
