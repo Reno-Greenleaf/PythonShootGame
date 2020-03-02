@@ -28,6 +28,9 @@ class Bullet(Sprite):
     def update(self):
         self.rect.top -= self.speed
 
+        if self.rect.bottom < 0:
+            self.kill()
+
 
 class Player(Sprite):
     def __init__(self, plane_img, player_rect, init_pos):
@@ -50,6 +53,7 @@ class Player(Sprite):
 
     def update(self):
         self.image = self.images[self.img_index]
+        self.bullets.update()
 
         if self.is_hit:
             self.img_index = self.down_index // 8

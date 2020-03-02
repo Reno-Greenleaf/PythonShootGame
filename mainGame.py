@@ -62,14 +62,6 @@ while running:
 
     enemy_frequency += 1
 
-    # Move the bullet, if it is beyond the window range, delete.
-    player.bullets.update()
-
-    for bullet in player.bullets:
-
-        if bullet.rect.bottom < 0:
-            player.bullets.remove(bullet)
-
     # Move enemy aircraft, delete if it exceeds the window range.
     enemies1.update()
 
