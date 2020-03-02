@@ -12,6 +12,8 @@ from gameRole import *
 import random
 from pool import Pool
 
+
+pool = Pool()
 # Initialize the game
 pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -32,27 +34,8 @@ pygame.mixer.music.set_volume(0.25)
 background = pygame.image.load('resources/image/background.png').convert()
 game_over = pygame.image.load('resources/image/gameover.png')
 
-plane_img = pygame.image.load('resources/image/shoot.png')
-
-# Set player related parameters.
-player_rect = []
-player_rect.append(pygame.Rect(0, 99, 102, 126))        # Player sprite picture area
-player_rect.append(pygame.Rect(165, 360, 102, 126))
-player_rect.append(pygame.Rect(165, 234, 102, 126))     # Player explodes sprite image area
-player_rect.append(pygame.Rect(330, 624, 102, 126))
-player_rect.append(pygame.Rect(330, 498, 102, 126))
-player_rect.append(pygame.Rect(432, 624, 102, 126))
-player_pos = [200, 600]
-player = Player(plane_img, player_rect, player_pos)
-
-# Define the surface related parameters used by the enemy object.
-enemy1_rect = pygame.Rect(534, 612, 57, 43)
-enemy1_img = plane_img.subsurface(enemy1_rect)
-enemy1_down_imgs = []
-enemy1_down_imgs.append(plane_img.subsurface(pygame.Rect(267, 347, 57, 43)))
-enemy1_down_imgs.append(plane_img.subsurface(pygame.Rect(873, 697, 57, 43)))
-enemy1_down_imgs.append(plane_img.subsurface(pygame.Rect(267, 296, 57, 43)))
-enemy1_down_imgs.append(plane_img.subsurface(pygame.Rect(930, 697, 57, 43)))
+# Add players aircraft.
+player = pool.create_player((200, 600))
 
 enemies1 = pygame.sprite.Group()
 
@@ -72,8 +55,8 @@ while running:
 
     # Generating enemy aircraft.
     if enemy_frequency == 50:
-        enemy1_pos = [random.randint(0, SCREEN_WIDTH - enemy1_rect.width), 0]
-        enemy1 = Enemy(enemy1_img, enemy1_down_imgs, enemy1_pos)
+        enemy1_pos = [random.randint(0, SCREEN_WIDTH - 57), 0]
+        enemy1 = pool.create_enemy(enemy1_pos)
         enemies1.add(enemy1)
         enemy_frequency = 0
 
