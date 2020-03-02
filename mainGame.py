@@ -55,7 +55,7 @@ while running:
 
     # Generating enemy aircraft.
     if enemy_frequency == 50:
-        enemy1_pos = [random.randint(0, SCREEN_WIDTH - 57), 0]
+        enemy1_pos = [random.randint(0, SCREEN_WIDTH - 57), -43]
         enemy1 = pool.create_enemy(enemy1_pos)
         enemies1.add(enemy1)
         enemy_frequency = 0
