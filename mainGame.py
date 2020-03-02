@@ -74,9 +74,6 @@ while running:
             game_over_sound.play()
             break
 
-        if enemy.rect.top > SCREEN_HEIGHT:
-            enemies1.remove(enemy)
-
     # Add the enemy object that was hit to the destroyed enemy group to render the destroy animation.
     enemies1_down = pygame.sprite.groupcollide(enemies1, player.bullets, 1, 1)
 

@@ -129,3 +129,6 @@ class Enemy(Sprite):
 
     def update(self):
         self.rect.top += self.speed
+
+        if self.rect.top > SCREEN_HEIGHT:
+            self.kill()
