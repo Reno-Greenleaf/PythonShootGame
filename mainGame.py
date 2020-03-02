@@ -10,7 +10,7 @@ from sys import exit
 from pygame.locals import *
 from gameRole import *
 import random
-
+from pool import Pool
 
 # Initialize the game
 pygame.init()
@@ -45,10 +45,6 @@ player_rect.append(pygame.Rect(432, 624, 102, 126))
 player_pos = [200, 600]
 player = Player(plane_img, player_rect, player_pos)
 
-# Define the surface related parameters used by the bullet object.
-bullet_rect = pygame.Rect(1004, 987, 9, 21)
-bullet_img = plane_img.subsurface(bullet_rect)
-
 # Define the surface related parameters used by the enemy object.
 enemy1_rect = pygame.Rect(534, 612, 57, 43)
 enemy1_img = plane_img.subsurface(enemy1_rect)
@@ -63,7 +59,6 @@ enemies1 = pygame.sprite.Group()
 # Store the destroyed aircraft for rendering the wrecking sprite animation.
 enemies_down = pygame.sprite.Group()
 
-shoot_frequency = 0
 enemy_frequency = 0
 player_down_index = 16
 score = 0
@@ -74,15 +69,6 @@ running = True
 while running:
     # Maximum framerate of the game is 60.
     clock.tick(60)
-
-    # Controle the firing of the bullet frequency and fire the bullet.
-    if not player.is_hit:
-        shoot_frequency += 1
-
-        if shoot_frequency == 15:
-            bullet_sound.play()
-            player.shoot(bullet_img)
-            shoot_frequency = 0
 
     # Generating enemy aircraft.
     if enemy_frequency == 50:
@@ -109,7 +95,7 @@ while running:
         if pygame.sprite.collide_circle(enemy, player):
             enemies_down.add(enemy)
             enemies1.remove(enemy)
-            player.is_hit = True
+            player.collided()
             game_over_sound.play()
             break
 
@@ -123,21 +109,14 @@ while running:
         enemies_down.add(enemy_down)
 
     # Drawing background.
-    screen.fill(0)
     screen.blit(background, (0, 0))
 
     # Drawing player plane.
-    if not player.is_hit:
-        screen.blit(player.image[player.img_index], player.rect)
-        # Change the image index to make the aircraft animated.
-        player.img_index = shoot_frequency // 8
-    else:
-        player.img_index = player_down_index // 8
-        screen.blit(player.image[player.img_index], player.rect)
-        player_down_index += 1
+    player.update()
+    screen.blit(player.image, player.rect)
 
-        if player_down_index > 47:
-            running = False
+    if player.down_index > 47:
+        running = False
 
     # Draw a wreck animation.
     for enemy_down in enemies_down:

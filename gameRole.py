@@ -7,7 +7,7 @@ Created on Wed Sep 11 16:36:03 2013
 
 import pygame
 from pygame.sprite import Sprite, Group
-from pygame import locals as l
+from pygame import locals as l, Rect
 
 SCREEN_WIDTH = 480
 SCREEN_HEIGHT = 800
@@ -32,10 +32,11 @@ class Bullet(Sprite):
 class Player(Sprite):
     def __init__(self, plane_img, player_rect, init_pos):
         Sprite.__init__(self)
-        self.image = []                                 # Used to store a list of player object sprite images.
+        self.bullet_img = plane_img.subsurface(Rect(1004, 987, 9, 21))
+        self.images = []                                 # Used to store a list of player object sprite images.
 
         for rect in player_rect:
-            self.image.append(plane_img.subsurface(rect).convert_alpha())
+            self.images.append(plane_img.subsurface(rect).convert_alpha())
 
         self.rect = player_rect[0]                      # Initialize the rectangle where the image is located.
         self.rect.topleft = init_pos                    # Initialize the coordinates of the upper left corner of the rectangle.
@@ -43,11 +44,29 @@ class Player(Sprite):
         self.bullets = Group()                          # A collection of bullets fired by the player's aircraft.
         self.img_index = 0                              # Player sprite image index.
         self.is_hit = False                             # Whether the player is hit.
+        self.image = self.images[self.img_index]
+        self.shoot_frequency = 0
+        self.down_index = 16
 
-    def shoot(self, bullet_img):
-        """ Newly created bullet is going to start moving towards enemies immediately. """
-        bullet = Bullet(bullet_img, self.rect.midtop)
-        self.bullets.add(bullet)
+    def update(self):
+        self.image = self.images[self.img_index]
+
+        if self.is_hit:
+            self.img_index = self.down_index // 8
+            self.down_index += 1
+            return
+
+        self.shoot_frequency += 1
+
+        if self.shoot_frequency == 15:
+            bullet = Bullet(self.bullet_img, self.rect.midtop)
+            self.bullets.add(bullet)
+            self.shoot_frequency = 0
+
+        self.img_index = self.shoot_frequency // 8
+
+    def collided(self):
+        self.is_hit = True
 
     def key_pressed(self, key):
         if self.is_hit:
