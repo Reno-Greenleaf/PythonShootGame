@@ -33,15 +33,11 @@ class Bullet(Sprite):
 
 
 class Player(Sprite):
-    def __init__(self, plane_img, player_rect, init_pos):
+    def __init__(self, plane_img, images, init_pos):
         Sprite.__init__(self)
         self.bullet_img = plane_img.subsurface(Rect(1004, 987, 9, 21))
-        self.images = []                                 # Used to store a list of player object sprite images.
-
-        for rect in player_rect:
-            self.images.append(plane_img.subsurface(rect).convert_alpha())
-
-        self.rect = player_rect[0]                      # Initialize the rectangle where the image is located.
+        self.images = images                            # Used to store a list of player object sprite images.
+        self.rect = self.images[0].get_rect()            # Initialize the rectangle where the image is located.
         self.rect.topleft = init_pos                    # Initialize the coordinates of the upper left corner of the rectangle.
         self.speed = 8                                  # Initialize the player speed, here is a certain value.
         self.bullets = Group()                          # A collection of bullets fired by the player's aircraft.

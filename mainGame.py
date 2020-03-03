@@ -43,7 +43,6 @@ enemies1 = pygame.sprite.Group()
 enemies_down = pygame.sprite.Group()
 
 enemy_frequency = 0
-player_down_index = 16
 score = 0
 clock = pygame.time.Clock()
 
@@ -61,8 +60,6 @@ while running:
         enemy_frequency = 0
 
     enemy_frequency += 1
-
-    # Move enemy aircraft, delete if it exceeds the window range.
     enemies1.update()
 
     for enemy in enemies1:
