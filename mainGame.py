@@ -7,7 +7,6 @@ Created on Wed Sep 11 11:05:00 2013
 
 import pygame
 from sys import exit
-from pygame.locals import *
 from gameRole import *
 import random
 from pool import Pool
@@ -47,10 +46,26 @@ score = 0
 clock = pygame.time.Clock()
 
 running = True
+paused = False
 
 while running:
     # Maximum framerate of the game is 60.
     clock.tick(60)
+
+    # Listening for keyboard events.
+    key = pygame.key.get_pressed()
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            exit()
+        elif event.type == pygame.KEYDOWN and event.key == pygame.K_p:
+            paused = not paused
+
+    if paused:
+        continue
+
+    player.key_pressed(key)
 
     # Generating enemy aircraft.
     if enemy_frequency == 50:
@@ -113,15 +128,6 @@ while running:
 
     # Update screen.
     pygame.display.update()
-
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            exit()
-            
-    # Listening for keyboard events.
-    key = pygame.key.get_pressed()
-    player.key_pressed(key)
 
 
 font = pygame.font.Font(None, 48)
