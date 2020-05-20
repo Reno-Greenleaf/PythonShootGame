@@ -13,6 +13,7 @@ from pool import Pool
 
 
 pool = Pool()
+
 # Initialize the game
 pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
